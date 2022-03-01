@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:week4ex1/widgets/todo_widget.dart';
 import 'models/todo.dart';
+import 'models/todo_list.dart';
 
 void main() {
-  runApp(const ToDoApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ToDoList(),
+    child: const ToDoApp(),
+  ));
+  //runApp(const ToDoApp());
 }
 
 class ToDoApp extends StatelessWidget {
@@ -11,9 +17,10 @@ class ToDoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData.dark(),
       title: 'ToDo App',
-      home: ToDoHomePage(title: 'ToDo App Title'),
+      home: const ToDoHomePage(title: 'ToDo App Title'),
     );
   }
 }
@@ -30,11 +37,6 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
 
   final TextEditingController _controlName = TextEditingController();
   final TextEditingController _controlDescription = TextEditingController();
-
-  final List<ToDo> todos = <ToDo>[
-    ToDo(name: "Shopping", description: "Pick up Groceries"),
-    ToDo(name: "Paint", description: "Paint the kitchen")
-  ];
 
   void _openAddTodo() {
     showDialog(
@@ -65,12 +67,12 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  todos.add(ToDo(
+                Provider.of<ToDoList>(context, listen: false).addToDo(
+                  ToDo(
                     name: _controlName.text,
-                    description: _controlDescription.text)
-                  );
-                });
+                    description: _controlDescription.text
+                  )
+                );
                 Navigator.pop(context);
               },
               child: const Text("Add"))
@@ -86,27 +88,28 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+              child: Consumer<ToDoList>(builder: (context, model, child) {
+                return Text("Uncomplete: " + model.todoCount.toString());
+              },
+          ),)
+          ),
+        ],
       ),
       body: Center(
-        child: ListView.builder(
-          itemCount: todos.length,
-          itemBuilder:(BuildContext context, int i) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.amberAccent[700],
-                border: const Border(left: BorderSide(color: Colors.white)),
-              ),
-              height: 40,
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                todos[i].toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                )
-                ),
+        child: Consumer<ToDoList>(
+          builder:(context, model, child) {
+            return ListView.builder(
+              itemCount: model.todos.length,
+              itemBuilder:(BuildContext context, int i) {
+                return ToDoWidget(todo: model.todos[i]);
+              }
             );
-        }),
+          },
+        )
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddTodo,
