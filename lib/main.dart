@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'models/todomodel.dart';
+import 'models/todo.dart';
 
 void main() {
   runApp(const ToDoApp());
