@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:week4ex1/models/todo.dart';
+import 'package:week4ex1/models/todo_list.dart';
 
 class ToDoWidget extends StatefulWidget {
   final ToDo todo;
@@ -17,14 +19,51 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                 // color: Colors.amberAccent[700],
                 border: Border(left: BorderSide(color: Colors.white)),
               ),
-              height: 40,
+              height: 60,
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                widget.todo.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                )
+              padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: widget.todo.complete,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        widget.todo.complete = newValue;
+                        //ToDo _t = ToDo(name: widget.todo.name, description: widget.todo.description, complete: newValue);
+                        Provider.of<ToDoList>(context, listen: false).updateToDo(widget.todo);
+                      });
+                    }
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 0, 12, 0),
+                    child: VerticalDivider(
+                      width: 2,
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 10,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.todo.name.toString(),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        )
+                      ),
+                      Text(
+                        widget.todo.description.toString(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        )
+                      ),
+                    ],
+                  ),
+                ],
               ),
     );
   }

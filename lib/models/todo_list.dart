@@ -8,7 +8,16 @@ class ToDoList extends ChangeNotifier {
   
   UnmodifiableListView<ToDo> get todos => UnmodifiableListView(_todos);
 
-  int get todoCount => _todos.length;
+  int get todoCount {
+    int c = 0;
+    for (var _t in _todos) {
+      if (_t.complete == false) {
+        c++;
+      }
+    }
+    print('take 1');
+    return c;
+  }
 
   void addToDo(ToDo todo) {
     _todos.add(todo);

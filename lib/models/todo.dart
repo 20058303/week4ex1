@@ -2,7 +2,7 @@ class ToDo {
   late int id;
   final String name;
   final String description;
-  final bool complete;
+  bool? complete;
 
   ToDo({required this.name, required this.description, this.complete=false});
 
