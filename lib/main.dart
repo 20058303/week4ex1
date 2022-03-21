@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'services/sqlite_datasource.dart';
+import 'services/todo_datasource.dart';
 import 'package:provider/provider.dart';
 import 'package:week4ex1/widgets/todo_widget.dart';
 import 'models/todo.dart';
 import 'models/todo_list.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  GetIt.I.registerLazySingleton<TodoDatasource>(() => LocalSQLiteDatasource());
   runApp(ChangeNotifierProvider(
     create: (context) => ToDoList(),
     child: const ToDoApp(),

@@ -1,12 +1,11 @@
-import 'dart:html';
-
 import 'package:week4ex1/models/todo.dart';
 
 import 'todo_datasource.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class LocalSQLiteDatasource implements TodoDatasouce {
+
+class LocalSQLiteDatasource implements TodoDatasource {
   late Database database;
   bool initalized = false;
 
@@ -39,23 +38,42 @@ class LocalSQLiteDatasource implements TodoDatasouce {
   }
 
   @override
-  Future<bool> addTodo(ToDo t) async {
-    return true;
+  Future<void> addTodo(ToDo t) async {
+    if(initalized) {
+      await database.insert(
+        'todos',
+        t.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace
+      );
+    }
   }
 
   @override
-  Future<bool> deleteTodo(ToDo t) async {
-    return true;
+  Future<void> deleteTodo(int id) async {
+    if(initalized) {
+      await database.delete(
+        'todos',
+        where: 'id = ?',
+        whereArgs: [id]
+      );
+    }
   }
 
   @override
   Future<ToDo> getTodo(int id) async {
-    return ToDo(name: 'name', description: 'description', complete: false);
+    final List<Map<String, dynamic>> l = await database.query('todos', where: 'id = ?', whereArgs: [id]);
+    return ToDo(
+      name: l[0]['name'],
+      description: l[0]['description'],
+      complete: l[0]['complete'],
+    );
   }
 
   @override
-  Future<bool> updateTodo(ToDo t) async {
-    return true;
+  Future<void> updateTodo(ToDo t) async {
+    if(initalized) {
+      await database.update('todos', t.toMap(), where: 'id = ?', whereArgs: [t.id]);
+    }
   }
 
 }
