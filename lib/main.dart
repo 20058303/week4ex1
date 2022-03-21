@@ -107,11 +107,14 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
       body: Center(
         child: Consumer<ToDoList>(
           builder:(context, model, child) {
-            return ListView.builder(
-              itemCount: model.todos.length,
-              itemBuilder:(BuildContext context, int i) {
-                return ToDoWidget(todo: model.todos[i]);
-              }
+            return RefreshIndicator(
+              onRefresh: model.refresh,
+              child: ListView.builder(
+                itemCount: model.todos.length,
+                itemBuilder:(BuildContext context, int i) {
+                  return ToDoWidget(todo: model.todos[i]);
+                }
+              ),
             );
           },
         )

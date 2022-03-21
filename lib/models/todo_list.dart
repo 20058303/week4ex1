@@ -1,10 +1,12 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:week4ex1/models/todo.dart';
+import 'package:week4ex1/services/todo_datasource.dart';
 
 class ToDoList extends ChangeNotifier {
-  final List<ToDo> _todos = [];
+  List<ToDo> _todos = [];
   
   UnmodifiableListView<ToDo> get todos => UnmodifiableListView(_todos);
 
@@ -15,14 +17,27 @@ class ToDoList extends ChangeNotifier {
         c++;
       }
     }
-    print('take 1');
     return c;
   }
 
-  void addToDo(ToDo todo) {
-    _todos.add(todo);
+  Future<void> refresh() async {
+    _todos = await GetIt.I<TodoDatasource>().all();
+  }
+
+  Future<void> addToDo(ToDo toDo) async {
+    GetIt.I<TodoDatasource>().addTodo(toDo);
     notifyListeners();
   }
+
+  Future<void> removeToDo(ToDo toDo) async {
+    GetIt.I<TodoDatasource>().deleteTodo(toDo.id);
+    notifyListeners();
+  }
+
+  // void addToDo(ToDo todo) {
+  //   _todos.add(todo);
+  //   notifyListeners();
+  // }
 
   void updateToDo(ToDo todo) {
     ToDo listTodo = _todos.firstWhere((t) => t.name == todo.name);
@@ -35,8 +50,8 @@ class ToDoList extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeToDo(ToDo todo) {
-    _todos.remove(todo);
-    notifyListeners();
-  }
+  // void removeToDo(ToDo todo) {
+  //   _todos.remove(todo);
+  //   notifyListeners();
+  // }
 }

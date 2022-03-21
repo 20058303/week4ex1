@@ -29,7 +29,6 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                     onChanged: (bool? newValue) {
                       setState(() {
                         widget.todo.complete = newValue;
-                        //ToDo _t = ToDo(name: widget.todo.name, description: widget.todo.description, complete: newValue);
                         Provider.of<ToDoList>(context, listen: false).updateToDo(widget.todo);
                       });
                     }
