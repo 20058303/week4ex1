@@ -18,10 +18,12 @@ class LocalSQLiteDatasource implements TodoDatasource {
       join(await getDatabasesPath(), 'todo_data.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE todos (id INTEGER PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
+          'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTO_INCREMENT, name TEXT, description TEXT, complete INTEGER)');
       },
+      version: 1,
     );
     initalized = true;
+    print('initalized');
   }
 
   @override
@@ -45,6 +47,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
         t.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace
       );
+      print('$t -- yes');
     }
   }
 
