@@ -7,7 +7,7 @@ import 'package:week4ex1/services/todo_datasource.dart';
 
 class ToDoList extends ChangeNotifier {
   List<ToDo> _todos = [];
-  
+
   UnmodifiableListView<ToDo> get todos => UnmodifiableListView(_todos);
 
   int get todoCount {
@@ -22,17 +22,15 @@ class ToDoList extends ChangeNotifier {
 
   Future<void> refresh() async {
     _todos = await GetIt.I<TodoDatasource>().all();
-    print(_todos);
   }
 
   Future<void> addToDo(ToDo toDo) async {
-    print(toDo);
-    GetIt.I<TodoDatasource>().addTodo(toDo);
+    GetIt.I<TodoDatasource>().addTodo(to0Do);
     notifyListeners();
   }
 
   Future<void> removeToDo(ToDo toDo) async {
-    GetIt.I<TodoDatasource>().deleteTodo(toDo.id);
+    GetIt.I<TodoDatasource>().deleteTodo(toDo);
     notifyListeners();
   }
 

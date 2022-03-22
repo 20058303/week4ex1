@@ -4,7 +4,7 @@ class ToDo {
   final String description;
   bool? complete;
 
-  ToDo({required this.name, required this.description, this.complete=false});
+  ToDo({required this.name, required this.description, this.complete = false});
 
   Map<String, dynamic> toMap() {
     return {
