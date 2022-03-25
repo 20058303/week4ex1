@@ -62,11 +62,17 @@ class _ToDoWidgetState extends State<ToDoWidget> {
                       ),
                     ],
                   ),
-                  ElevatedButton(onPressed: () {
-                    setState(() {
-                      Provider.of<ToDoList>(context, listen: false).removeToDo(widget.todo);
-                    });
-                  }, child: const Text('Delete'))
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        Provider.of<ToDoList>(context, listen: false).removeToDo(widget.todo);
+                      });},
+                    child: const Icon(Icons.delete),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red
+                    ),
+                  )
                 ],
               ),
     );

@@ -17,7 +17,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
       join(await getDatabasesPath(), 'todo_data.db'),
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE todos (id INTEGER PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
+            'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, complete INTEGER)');
       },
       version: 1,
     );
@@ -37,24 +37,24 @@ class LocalSQLiteDatasource implements TodoDatasource {
   }
 
   @override
-  Future<bool> addTodo(ToDo t) async {
+  Future<int> addTodo(ToDo t) async {
+    int result = 0;
     if (initalized) {
-      await database.insert('todos', t.toMap().remove('id'),
+      result = await database.insert('todos', t.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
-      return true;
-    } else {
-      return false;
+      return result;
     }
+    return result;
   }
 
   @override
-  Future<bool> deleteTodo(ToDo t) async {
+  Future<int> deleteTodo(ToDo t) async {
+    int result = 0;
     if (initalized) {
-      await database.delete('todos', where: 'id = ?', whereArgs: [t.id]);
-      return true;
-    } else {
-      return false;
+      result = await database.delete('todos', where: 'name = ? and description = ?', whereArgs: [t.name, t.description]);
+      return result;
     }
+    return result;
   }
 
   @override
@@ -69,10 +69,23 @@ class LocalSQLiteDatasource implements TodoDatasource {
   }
 
   @override
-  Future<void> updateTodo(ToDo t) async {
+  Future<int> updateTodo(ToDo t) async {
+    int result = 0;
     if (initalized) {
-      await database
-          .update('todos', t.toMap(), where: 'id = ?', whereArgs: [t.id]);
+      result = await database
+          .update('todos', t.toMap(), where: 'name = ? and description = ?', whereArgs: [t.name, t.description]);
+      return result;
     }
+    return result;
+  }
+  
+  @override
+  Future<int> deleteAll() async {
+    int result = 0;
+    if (initalized) {
+      result = await database.delete('todos');
+      return result;
+    }
+    return result;
   }
 }

@@ -22,36 +22,27 @@ class ToDoList extends ChangeNotifier {
 
   Future<void> refresh() async {
     _todos = await GetIt.I<TodoDatasource>().all();
+    print(_todos);
+    notifyListeners();
   }
 
   Future<void> addToDo(ToDo toDo) async {
-    GetIt.I<TodoDatasource>().addTodo(to0Do);
-    notifyListeners();
+    GetIt.I<TodoDatasource>().addTodo(toDo);
+    refresh();
   }
 
   Future<void> removeToDo(ToDo toDo) async {
     GetIt.I<TodoDatasource>().deleteTodo(toDo);
-    notifyListeners();
+    refresh();
   }
 
-  // void addToDo(ToDo todo) {
-  //   _todos.add(todo);
-  //   notifyListeners();
-  // }
-
-  void updateToDo(ToDo todo) {
-    ToDo listTodo = _todos.firstWhere((t) => t.name == todo.name);
-    listTodo = todo;
-    notifyListeners();
+  Future<void> removeAll() async {
+    GetIt.I<TodoDatasource>().deleteAll();
+    refresh();
   }
 
-  void removeAll() {
-    _todos.clear();
-    notifyListeners();
+  Future<void> updateToDo(ToDo toDo) async {
+    GetIt.I<TodoDatasource>().updateTodo(toDo);
+    refresh();
   }
-
-  // void removeToDo(ToDo todo) {
-  //   _todos.remove(todo);
-  //   notifyListeners();
-  // }
 }
