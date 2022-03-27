@@ -17,7 +17,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
       join(await getDatabasesPath(), 'todo_data.db'),
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, complete INTEGER)');
+            'CREATE TABLE todos (id TEXT PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
       },
       version: 1,
     );
@@ -51,7 +51,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
   Future<int> deleteTodo(ToDo t) async {
     int result = 0;
     if (initalized) {
-      result = await database.delete('todos', where: 'name = ? and description = ?', whereArgs: [t.name, t.description]);
+      result = await database.delete('todos', where: 'id = ?', whereArgs: [t.id]);
       return result;
     }
     return result;
@@ -73,7 +73,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
     int result = 0;
     if (initalized) {
       result = await database
-          .update('todos', t.toMap(), where: 'name = ? and description = ?', whereArgs: [t.name, t.description]);
+          .update('todos', t.toMap(), where: 'id = ?', whereArgs: [t.id]);
       return result;
     }
     return result;

@@ -22,7 +22,6 @@ class ToDoList extends ChangeNotifier {
 
   Future<void> refresh() async {
     _todos = await GetIt.I<TodoDatasource>().all();
-    print(_todos);
     notifyListeners();
   }
 
