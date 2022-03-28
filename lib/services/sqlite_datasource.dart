@@ -58,7 +58,7 @@ class LocalSQLiteDatasource implements TodoDatasource {
   }
 
   @override
-  Future<ToDo> getTodo(int id) async {
+  Future<ToDo> getTodo(String id) async {
     final List<Map<String, dynamic>> l =
         await database.query('todos', where: 'id = ?', whereArgs: [id]);
     return ToDo(
