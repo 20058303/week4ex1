@@ -9,7 +9,7 @@ import 'models/todo_list.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  GetIt.I.registerLazySingleton<TodoDatasource>(() => LocalSQLiteDatasource());
+  GetIt.I.registerSingleton<TodoDatasource>(LocalSQLiteDatasource());
   runApp(ChangeNotifierProvider(
     create: (context) => ToDoList(),
     child: const ToDoApp(),
@@ -97,27 +97,22 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
             ),
           )),
           Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Consumer<ToDoList>(
-              builder: (context, model, child) {
-                return GestureDetector(
-                onTap: () {
-                  model.removeAll();
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Consumer<ToDoList>(
+                builder: (context, model, child) {
+                  return GestureDetector(
+                      onTap: () {
+                        model.removeAll();
+                      },
+                      child: const Icon(Icons.delete_forever));
                 },
-                child: const Icon(
-                  Icons.delete_forever
-                ));
-            
-              }
-,
-            )
-          ),
+              )),
         ],
       ),
       body: Center(child: Consumer<ToDoList>(
         builder: (context, model, child) {
           return RefreshIndicator(
-            onRefresh:() => model.refresh(),
+            onRefresh: () => model.refresh(),
             child: ListView.builder(
                 itemCount: model.todos.length,
                 itemBuilder: (BuildContext context, int i) {
@@ -126,11 +121,13 @@ class _ToDoHomePageState extends State<ToDoHomePage> {
           );
         },
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openAddTodo,
-        tooltip: "Add new ToDo",
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: Builder(builder: (context) {
+        return FloatingActionButton(
+          onPressed: _openAddTodo,
+          tooltip: "Add new ToDo",
+          child: const Icon(Icons.add),
+        );
+      }),
     );
   }
 }

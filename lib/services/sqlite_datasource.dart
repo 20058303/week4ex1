@@ -14,10 +14,10 @@ class LocalSQLiteDatasource implements TodoDatasource {
 
   Future<void> init() async {
     database = await openDatabase(
-      join(await getDatabasesPath(), 'todo_data.db'),
+      join(await getDatabasesPath(), 'todo3_data.db'),
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE todos (id TEXT PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
+            'CREATE TABLE todos (rowid INTEGER PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
       },
       version: 1,
     );
@@ -28,8 +28,10 @@ class LocalSQLiteDatasource implements TodoDatasource {
   Future<List<ToDo>> all() async {
     if (!initalized) return <ToDo>[];
     List<Map<String, dynamic>> maps = await database.query('todos');
+    print(maps);
     return List.generate(maps.length, (i) {
       return ToDo(
+          id: maps[i]['rowid'],
           name: maps[i]['name'],
           description: maps[i]['description'],
           complete: maps[i]['complete'] == 0 ? false : true);
@@ -51,16 +53,17 @@ class LocalSQLiteDatasource implements TodoDatasource {
   Future<int> deleteTodo(ToDo t) async {
     int result = 0;
     if (initalized) {
-      result = await database.delete('todos', where: 'id = ?', whereArgs: [t.id]);
+      result =
+          await database.delete('todos', where: 'rowid = ?', whereArgs: [t.id]);
       return result;
     }
     return result;
   }
 
   @override
-  Future<ToDo> getTodo(int id) async {
+  Future<ToDo> getTodo(String id) async {
     final List<Map<String, dynamic>> l =
-        await database.query('todos', where: 'id = ?', whereArgs: [id]);
+        await database.query('todos', where: 'rowid = ?', whereArgs: [id]);
     return ToDo(
       name: l[0]['name'],
       description: l[0]['description'],
@@ -73,12 +76,12 @@ class LocalSQLiteDatasource implements TodoDatasource {
     int result = 0;
     if (initalized) {
       result = await database
-          .update('todos', t.toMap(), where: 'id = ?', whereArgs: [t.id]);
+          .update('todos', t.toMap(), where: 'rowid = ?', whereArgs: [t.id]);
       return result;
     }
     return result;
   }
-  
+
   @override
   Future<int> deleteAll() async {
     int result = 0;

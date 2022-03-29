@@ -5,6 +5,6 @@ abstract class TodoDatasource {
   Future<int> addTodo(ToDo t);
   Future<int> deleteTodo(ToDo t);
   Future<int> deleteAll();
-  Future<ToDo> getTodo(int id);
+  Future<ToDo> getTodo(String id);
   Future<int> updateTodo(ToDo t);
 }

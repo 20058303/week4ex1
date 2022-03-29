@@ -11,13 +11,7 @@ class ToDoList extends ChangeNotifier {
   UnmodifiableListView<ToDo> get todos => UnmodifiableListView(_todos);
 
   int get todoCount {
-    int c = 0;
-    for (var _t in _todos) {
-      if (_t.complete == false) {
-        c++;
-      }
-    }
-    return c;
+    return _todos.where((i) => i.complete == false).length;
   }
 
   Future<void> refresh() async {
@@ -26,7 +20,7 @@ class ToDoList extends ChangeNotifier {
   }
 
   Future<void> addToDo(ToDo toDo) async {
-    GetIt.I<TodoDatasource>().addTodo(toDo);
+    await GetIt.I<TodoDatasource>().addTodo(toDo);
     refresh();
   }
 
