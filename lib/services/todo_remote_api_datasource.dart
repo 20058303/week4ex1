@@ -12,9 +12,7 @@ class ToDoRemoteAPIDatasource implements TodoDatasource {
   Future<List<ToDo>> all() async {
     http.Response response = await http.get(Uri.parse(apiURL));
     if (response.statusCode != 200) {
-      return <ToDo>[
-        ToDo(name: "Unable to Connect!", description: "Please try again soon.")
-      ];
+      return <ToDo>[];
     } else {
       List<dynamic> jsonList = jsonDecode(response.body);
       return List.generate(jsonList.length, (i) => ToDo.fromJson(jsonList[i]));
@@ -34,7 +32,7 @@ class ToDoRemoteAPIDatasource implements TodoDatasource {
 
   @override
   Future<int> deleteTodo(ToDo t) async {
-    http.Response response = await http.delete(Uri.parse(apiURL + t.id!));
+    http.Response response = await http.delete(Uri.parse(apiURL + t.id));
     if (response.statusCode != 200) {
       throw Exception(response.statusCode.toString());
     } else {
@@ -55,7 +53,7 @@ class ToDoRemoteAPIDatasource implements TodoDatasource {
   @override
   Future<int> updateTodo(ToDo t) async {
     http.Response response =
-        await http.patch(Uri.parse(apiURL + t.id!), body: t.toMap());
+        await http.patch(Uri.parse(apiURL + t.id), body: t.toMap());
     if (response.statusCode != 200) {
       throw Exception(response.statusCode.toString());
     } else {

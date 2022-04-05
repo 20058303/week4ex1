@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:week4ex1/services/hive_datasource.dart';
 import 'services/todo_remote_api_datasource.dart';
 import 'services/todo_datasource.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +10,7 @@ import 'models/todo_list.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  GetIt.I
-      .registerLazySingleton<TodoDatasource>(() => ToDoRemoteAPIDatasource());
+  GetIt.I.registerLazySingleton<TodoDatasource>(() => LocalHiveDataSource());
   runApp(ChangeNotifierProvider(
     create: (context) => ToDoList(),
     child: const ToDoApp(),
