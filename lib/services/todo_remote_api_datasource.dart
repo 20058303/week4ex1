@@ -63,7 +63,6 @@ class ToDoRemoteAPIDatasource implements TodoDatasource {
 
   @override
   Future<int> deleteAll() async {
-    // TODO: implement deleteAll
     throw UnimplementedError();
   }
 }
